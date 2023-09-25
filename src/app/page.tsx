@@ -15,9 +15,14 @@ export default function Home() {
 
   async function getValuesForSheet() {
     try {
-      const response = await axios.get('/api/get')
+      const response = await fetch('/api/get', {
+        method: 'GET',
+        next: { revalidate: 0.1 }
+      })
 
-      setData(response.data.values.slice(1))
+      const data = await response.json()
+
+      setData(data.values.slice(1))
     } catch (error) {
       console.log(error)
     }
