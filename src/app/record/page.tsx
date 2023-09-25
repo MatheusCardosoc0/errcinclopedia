@@ -1,6 +1,7 @@
 "use client"
 
 import Input from '@/components/Input'
+import Textarea from '@/components/Textarea'
 import ImageUpload from '@/components/Upload'
 import axios from 'axios'
 import Link from 'next/link'
@@ -105,25 +106,22 @@ export default function Home() {
                         type='text'
                     />
 
-                    <Input
-                        id='Resolution'
-                        label='Resolução'
-                        onChange={(e) => setResolution(e.target.value)}
-                        type='text'
-                    />
-
-                    <Input
-                        id='Info.Extra'
-                        label='Informação extra'
-                        onChange={(e) => setInfoExtra(e.target.value)}
-                        type='text'
-                    />
-
-                    <Input
+                    <Textarea
                         id='Context'
                         label='Contexto'
                         onChange={(e) => setContext(e.target.value)}
-                        type='text'
+                    />
+
+                    <Textarea
+                        id='Resolution'
+                        label='Resolução'
+                        onChange={(e) => setResolution(e.target.value)}
+                    />
+
+                    <Textarea
+                        id='Info.Extra'
+                        label='Informação extra'
+                        onChange={(e) => setInfoExtra(e.target.value)}
                     />
                 </div>
                 <div
