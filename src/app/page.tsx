@@ -8,7 +8,7 @@ import Main from '@/components/Main'
 
 export default async function Home() {
 
-  const response = await fetch('http://localhost:3000/api/get', {
+  const response = await fetch(`https://errcinclopedia.vercel.app/api/get`, {
     method: 'GET',
     next: { revalidate: 0 }
   })
