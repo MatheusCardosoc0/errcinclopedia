@@ -37,6 +37,7 @@ export default function Home() {
             alert('ok')
 
             router.push('/')
+            router.refresh()
         } catch (error) {
             alert('error')
         }
