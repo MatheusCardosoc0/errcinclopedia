@@ -9,7 +9,6 @@ import Main from '@/components/Main'
 export default async function Home() {
 
   const response = await fetch(`https://errcinclopedia.vercel.app/api/get`, {
-    method: 'GET',
     next: { revalidate: 0 }
   })
 
@@ -20,6 +19,10 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between">
 
       <Main errors={data.values.slice(1)} />
+
+      {/* {data.values.slice(1).map((item: any) => (
+        <ErrorLayout key={item[0].toString()} item={item} />
+      ))} */}
 
       <Link
         href={"/record"}

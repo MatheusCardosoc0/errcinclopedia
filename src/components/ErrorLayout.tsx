@@ -1,3 +1,5 @@
+"use client"
+
 import { data } from "@/@types/dataType";
 import { useCurrentError } from "@/context/currentError";
 import Image from "next/image";
