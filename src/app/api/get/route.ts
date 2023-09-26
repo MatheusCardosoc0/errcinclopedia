@@ -1,7 +1,7 @@
 import { google } from "googleapis"
 import { NextResponse } from "next/server"
 
-export const revalidate = 1
+export const revalidate = 0
 export async function GET() {
 
     try {
