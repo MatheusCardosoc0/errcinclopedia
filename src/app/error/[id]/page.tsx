@@ -112,7 +112,7 @@ const Error = () => {
                         <p
                             className="pl-2"
                         >
-                            {currentError[3]}
+                            {transformText(currentError[3].toString())}
                         </p>
                     </span>
                     <span
@@ -131,20 +131,22 @@ const Error = () => {
                         </p>
 
                     </span>
-                    <span
-                        className="
-                          w-[90%]
-                      "
-                    >
-                        <b>
-                            Informação extra:
-                        </b>
-                        <p
-                            className="pl-2"
+                    {currentError[5] && (
+                        <span
+                            className="
+                       w-[90%]
+                   "
                         >
-                            {currentError[5]}
-                        </p>
-                    </span>
+                            <b>
+                                Informação extra:
+                            </b>
+                            <p
+                                className="pl-2"
+                            >
+                                {transformText(currentError[5].toString())}
+                            </p>
+                        </span>
+                    )}
                 </div>
             </div>
         </section>

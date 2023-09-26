@@ -26,6 +26,8 @@ const ErrorLayout: React.FC<ErrorLayoutProps> = ({
         return str.length > 26 ? str.substring(0, 26) + '...' : str;
     }
 
+    console.log(item[2])
+
     return (
         <button
             onClick={SetCurrentFunction}
