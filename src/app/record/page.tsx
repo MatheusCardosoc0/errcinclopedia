@@ -3,32 +3,57 @@
 import Input from '@/components/Input'
 import Textarea from '@/components/Textarea'
 import ImageUpload from '@/components/Upload'
+import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+const schema = z.object({
+    title: z.string().min(8, "O titulo deve conter pelo menos 8 letras"),
+    resolution: z.string().min(10, 'A resolução deve conter ao menos 10 letras'),
+    context: z.string().min(10, 'O contexto deve conter pelo menos 10 letras'),
+})
+
+type FormProps = z.infer<typeof schema>
 
 export default function Home() {
+
+    const {
+        handleSubmit,
+        watch,
+        setValue,
+        formState: { errors },
+        register,
+    } = useForm<FormProps>({
+        resolver: zodResolver(schema),
+        reValidateMode: 'onChange',
+        mode: 'all',
+        defaultValues: {
+            context: '',
+            resolution: '',
+            title: ''
+        }
+    })
 
     const [title, setTitle] = useState("")
     const [resolution, setResolution] = useState("")
     const [infoExtra, setInfoExtra] = useState("")
-    const [Context, setContext] = useState("")
+    const [context, setContext] = useState("")
     const [image, setImage] = useState('')
 
     const router = useRouter()
 
-    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-
-        const Data = {
-            ID: 'ssss',
-            Title: title,
-            Resolution: resolution,
-            InfoExtra: infoExtra,
-            Image: image,
-            Context
+    async function onSubmit(data: FormProps) {
+        if (!image) {
+            alert("informe a imagem")
         }
+
+        console.log({ ...data, image, infoExtra })
+
+        const Data = { ...data, image, infoExtra }
 
         try {
             const response = await axios.post('/api/send', Data)
@@ -60,7 +85,7 @@ export default function Home() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
             <form
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmit(onSubmit)}
                 className='
                     w-[90%]
                     h-[90%]
@@ -101,25 +126,31 @@ export default function Home() {
                     />
 
                     <Input
-                        id='Title'
+                        id='title'
                         label='Titulo'
-                        onChange={(e) => setTitle(e.target.value)}
+                        register={register}
                         type='text'
+                        error={errors.title?.message}
                     />
 
                     <Textarea
-                        id='Context'
-                        label='Contexto'
-                        onChange={(e) => setContext(e.target.value)}
+                        id='context'
+                        name='context'
+                        label='contexto'
+                        register={register}
+                        error={errors.context?.message}
                     />
 
                     <Textarea
-                        id='Resolution'
+                        id='resolution'
+                        name='resolution'
                         label='Resolução'
-                        onChange={(e) => setResolution(e.target.value)}
+                        register={register}
+                        error={errors.resolution?.message}
                     />
 
                     <Textarea
+                        name='inFoExtra'
                         id='Info.Extra'
                         label='Informação extra'
                         onChange={(e) => setInfoExtra(e.target.value)}

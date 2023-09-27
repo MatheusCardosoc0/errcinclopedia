@@ -1,11 +1,11 @@
 'use client'
 
 import { HTMLInputTypeAttribute, useState } from 'react'
-//import { UseFormRegister } from 'react-hook-form'
 import { Eye, EyeOff } from 'lucide-react'
+import { UseFormRegister } from 'react-hook-form'
 
 type fileds =
-    | 'Title'
+    | 'title'
     | 'Resolution'
     | 'Context'
     | 'Info.Extra'
@@ -13,8 +13,7 @@ type fileds =
 interface InputProps {
     label: string
     error?: string | undefined
-    //register: UseFormRegister<any>
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    register: UseFormRegister<any>
     type: HTMLInputTypeAttribute
     disabled?: boolean
     id: fileds
@@ -23,11 +22,10 @@ interface InputProps {
 const Input: React.FC<InputProps> = ({
     error,
     label,
-    //register,
+    register,
     type,
     disabled,
     id,
-    onChange
 }) => {
     const [typeInput, setTypeInput] = useState(type)
 
@@ -38,7 +36,6 @@ const Input: React.FC<InputProps> = ({
                 w-full
                 flex-col
                 gap-1
-                drop-shadow-[0px_0px_1px_black]
             "
         >
             <span
@@ -54,12 +51,11 @@ const Input: React.FC<InputProps> = ({
                 {error}
             </span>
 
-            <div className="relative w-full">
+            <div className="relative w-full  drop-shadow-[0px_0px_1px_black]">
                 <input
                     id={id}
-                    //{...register(id)}
+                    {...register(id)}
                     disabled={disabled}
-                    onChange={onChange}
                     type={typeInput}
                     autoComplete={'off'}
                     className="
