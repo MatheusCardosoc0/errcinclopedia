@@ -49,19 +49,21 @@ const ErrorLayout: React.FC<ErrorLayoutProps> = ({
           '
         >
             <span>
-                {truncateString(item[1].toString())}
+                {item[1] ? truncateString(item[1].toString()) : ''}
             </span>
-            <Image
-                src={item[2].toString()}
-                alt='image'
-                className='
+            {item[2] && (
+                <Image
+                    src={item[2].toString()}
+                    alt='image'
+                    className='
                     w-full
                     h-[280px]
                     rounded-xl
                 '
-                width={720}
-                height={540}
-            />
+                    width={720}
+                    height={540}
+                />
+            )}
         </button>
     );
 }

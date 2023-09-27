@@ -3,12 +3,11 @@ import { NextResponse } from "next/server"
 import { v4 as uuidv4 } from 'uuid' // Importando a função para gerar IDs únicos.
 
 type mainData = {
-    ID: string
-    Title: string
-    Image: string
-    Context: string
-    Resolution: string
-    InfoExtra: string
+    title: string
+    image: string
+    context: string
+    resolution: string
+    infoExtra: string
 }
 
 export async function POST(
@@ -42,7 +41,7 @@ export async function POST(
             valueInputOption: 'USER_ENTERED',
             requestBody: {
                 values: [
-                    [uniqueID, body.Title, body.Image, body.Context, body.Resolution, body.InfoExtra]
+                    [uniqueID, body.title, body.image, body.context, body.resolution, body.infoExtra]
                 ]
             }
         })

@@ -20,11 +20,13 @@ const Main = ({
 
 
     useEffect(() => {
+        const lowercasedSearchTerm = searchTerm.toLowerCase();
+
         if (searchTerm === "") {
-            setFilteredData(errors)
+            setFilteredData(errors);
         } else {
             setFilteredData(data.filter(item =>
-                item[1].includes(searchTerm)
+                item[1].toString().toLowerCase().includes(lowercasedSearchTerm)
             ))
         }
     }, [searchTerm, errors, data])

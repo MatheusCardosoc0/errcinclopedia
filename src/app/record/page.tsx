@@ -7,14 +7,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { z } from 'zod'
 
 const schema = z.object({
     title: z.string().min(8, "O titulo deve conter pelo menos 8 letras"),
     resolution: z.string().min(10, 'A resolução deve conter ao menos 10 letras'),
     context: z.string().min(10, 'O contexto deve conter pelo menos 10 letras'),
+    image: z.string().nonempty("Adicione a imagem do erro"),
+    infoExtra: z.string().optional()
 })
 
 type FormProps = z.infer<typeof schema>
@@ -34,53 +36,32 @@ export default function Home() {
         defaultValues: {
             context: '',
             resolution: '',
-            title: ''
+            title: '',
+            image: '',
+            infoExtra: ''
         }
     })
 
-    const [title, setTitle] = useState("")
-    const [resolution, setResolution] = useState("")
-    const [infoExtra, setInfoExtra] = useState("")
-    const [context, setContext] = useState("")
-    const [image, setImage] = useState('')
+    const image = watch('image')
 
     const router = useRouter()
 
     async function onSubmit(data: FormProps) {
-        if (!image) {
-            alert("informe a imagem")
-        }
 
-        console.log({ ...data, image, infoExtra })
-
-        const Data = { ...data, image, infoExtra }
+        console.log(data)
 
         try {
-            const response = await axios.post('/api/send', Data)
+            const response = await axios.post('/api/send', data)
 
             console.log(response.data)
-            alert('ok')
+            toast.success("Mensagem de erro registrada!")
 
             router.push('/')
             router.refresh()
         } catch (error) {
-            alert('error')
+            toast.warning("Erro ao registrar mensagem")
         }
     }
-
-    async function getValuesForSheet() {
-        try {
-            const response = await axios.get('/api/get')
-
-            console.log(response.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        getValuesForSheet()
-    }, [])
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -120,8 +101,13 @@ export default function Home() {
                         gap-[6px]
                     '
                 >
+                    <span
+                        className='text-bold text-red-500 text-2xl'
+                    >
+                        {errors.image?.message}
+                    </span>
                     <ImageUpload
-                        onChange={(value) => setImage(value)}
+                        onChange={(value) => setValue('image', value)}
                         value={image}
                     />
 
@@ -136,7 +122,7 @@ export default function Home() {
                     <Textarea
                         id='context'
                         name='context'
-                        label='contexto'
+                        label='Contexto'
                         register={register}
                         error={errors.context?.message}
                     />
@@ -150,10 +136,10 @@ export default function Home() {
                     />
 
                     <Textarea
-                        name='inFoExtra'
-                        id='Info.Extra'
+                        name='infoExtra'
+                        id='infoExtra'
                         label='Informação extra'
-                        onChange={(e) => setInfoExtra(e.target.value)}
+                        register={register}
                     />
                 </div>
                 <div

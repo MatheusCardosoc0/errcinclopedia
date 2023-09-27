@@ -4,12 +4,14 @@ import { useCurrentError } from "@/context/currentError";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { ArrowBigLeft } from "lucide-react"
 
 const Error = () => {
 
     const { currentError } = useCurrentError()
+
+    const [large, setLarge] = useState(false)
 
     const router = useRouter()
 
@@ -19,7 +21,7 @@ const Error = () => {
     }
 
     function transformText(input: string): JSX.Element {
-        const segments = input.split('-');
+        const segments = input.split('*');
         return (
             <>
                 {segments.map((segment, index) => (
@@ -75,14 +77,18 @@ const Error = () => {
               "
             >
                 <Image
+                    onClick={() => setLarge(prev => !prev)}
                     src={currentError[2].toString()}
                     alt="image"
-                    width={580}
-                    height={740}
-                    className="
+                    width={1080}
+                    height={1080}
+                    className={`
                       h-[320px]
                       w-[440px]
-                    "
+                      cursor-pointer
+                      hover:scale-110
+                      ${large && 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[540px]'}
+                    `}
                 />
                 <div
                     className="
@@ -90,6 +96,8 @@ const Error = () => {
                       flex-col
                       gap-4
                       items-center
+                      w-full
+                      text-start
                     "
                 >
                     <h2

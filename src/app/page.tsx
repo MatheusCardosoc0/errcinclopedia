@@ -20,10 +20,6 @@ export default async function Home() {
 
       <Main errors={data.values.slice(1)} />
 
-      {/* {data.values.slice(1).map((item: any) => (
-        <ErrorLayout key={item[0].toString()} item={item} />
-      ))} */}
-
       <Link
         href={"/record"}
         title='Gravar novo erro'

@@ -27,7 +27,7 @@ const Textarea: React.FC<TextareaProps> = ({
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = event.target.value
             .split('\n')
-            .map((line) => line.trim() === "" ? line : line.startsWith('- ') ? line : '- ' + line)
+            .map((line) => line.trim() === "" ? line : line.startsWith('* ') ? line : '* ' + line)
             .join('\n');
 
         setValue(newValue);
