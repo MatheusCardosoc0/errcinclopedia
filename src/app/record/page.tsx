@@ -3,10 +3,14 @@
 import Input from '@/components/Input'
 import Textarea from '@/components/Textarea'
 import ImageUpload from '@/components/Upload'
+import { useCurrentCount } from '@/context/currentCount'
+import { useCurrentError } from '@/context/currentError'
+import { useCurrentMod } from '@/context/currentMod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
@@ -22,6 +26,8 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>
 
 export default function Home() {
+
+    const { currentMod } = useCurrentMod()
 
     const {
         handleSubmit,
@@ -43,17 +49,35 @@ export default function Home() {
     })
 
     const image = watch('image')
+    const context = watch('context');
+    const resolution = watch('resolution');
+    const title = watch('title');
+    const infoExtra = watch('infoExtra');
+
+    const { currentCount } = useCurrentCount()
+    const { currentError } = useCurrentError()
 
     const router = useRouter()
 
     async function onSubmit(data: FormProps) {
 
-        console.log(data)
-
         try {
-            const response = await axios.post('/api/send', data)
+            if (currentMod === 'POST') {
+                const id = `Error-${currentCount + 2}-${new Date()}`
 
-            console.log(response.data)
+                await axios.post('/api/send', { ...data, id })
+            } else {
+                const str = currentError[0].toString()
+                const regex = /-([0-9]+)-/;
+                const match = str.match(regex);
+
+                if (match) {
+                    const countId = parseInt(match[1], 10);
+
+                    await axios.put(`/api/update/A${countId}-F${countId}`, { ...data, id: currentError[0] })
+                }
+            }
+
             toast.success("Mensagem de erro registrada!")
 
             router.push('/')
@@ -62,6 +86,24 @@ export default function Home() {
             toast.warning("Erro ao registrar mensagem")
         }
     }
+
+    useEffect(() => {
+        if (currentMod === 'PUT') {
+            setValue('title', currentError[1].toString())
+            setValue('image', currentError[2].toString())
+            setValue('context', currentError[3].toString())
+            setValue('resolution', currentError[4].toString())
+            if (currentError[5]) {
+                setValue('infoExtra', currentError[5].toString())
+            }
+        }
+    }, [currentError, setValue, currentMod])
+
+    useEffect(() => {
+        if (currentMod === 'NONE') {
+            router.replace('/')
+        }
+    }, [router, currentMod, currentError])
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -125,6 +167,7 @@ export default function Home() {
                         label='Contexto'
                         register={register}
                         error={errors.context?.message}
+                        currentValue={context}
                     />
 
                     <Textarea
@@ -133,6 +176,7 @@ export default function Home() {
                         label='Resolução'
                         register={register}
                         error={errors.resolution?.message}
+                        currentValue={resolution}
                     />
 
                     <Textarea
@@ -140,6 +184,7 @@ export default function Home() {
                         id='infoExtra'
                         label='Informação extra'
                         register={register}
+                        currentValue={infoExtra || ''}
                     />
                 </div>
                 <div

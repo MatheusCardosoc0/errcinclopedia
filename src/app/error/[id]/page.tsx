@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
-import { ArrowBigLeft } from "lucide-react"
+import { ArrowBigLeft, PenSquare } from "lucide-react"
+import { useCurrentMod } from "@/context/currentMod";
 
 const Error = () => {
 
@@ -14,6 +15,7 @@ const Error = () => {
     const [large, setLarge] = useState(false)
 
     const router = useRouter()
+    const { setCurrentMod } = useCurrentMod()
 
     if (currentError[2] === undefined) {
         router.replace('/')
@@ -32,6 +34,11 @@ const Error = () => {
                 ))}
             </>
         );
+    }
+
+    function prepareToEdit() {
+        setCurrentMod("PUT")
+        router.push("/record")
     }
 
     return (
@@ -61,6 +68,23 @@ const Error = () => {
             >
                 <ArrowBigLeft size={40} />
             </Link>
+
+            <button
+                onClick={() => prepareToEdit()}
+                title="Editar"
+                className="
+                fixed
+                bottom-4
+                right-4
+                p-4
+                rounded-full
+                bg-gradient-to-tr from-cyan-500 to-sky-500
+                text-white
+                z-20
+              "
+            >
+                <PenSquare size={80} />
+            </button>
             <div
                 className="
                 flex

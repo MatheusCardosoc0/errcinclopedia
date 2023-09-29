@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 
 interface TextareaProps {
@@ -11,6 +11,7 @@ interface TextareaProps {
     register?: UseFormRegister<any>;
     disabled?: boolean;
     id: string;
+    currentValue: string
 }
 
 const Textarea: React.FC<TextareaProps> = ({
@@ -20,9 +21,14 @@ const Textarea: React.FC<TextareaProps> = ({
     disabled,
     id,
     register,
-    onChange
+    onChange,
+    currentValue
 }) => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(currentValue);
+
+    useEffect(() => {
+        setValue(currentValue);
+    }, [currentValue]);
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = event.target.value

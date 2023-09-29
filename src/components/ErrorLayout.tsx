@@ -25,7 +25,7 @@ const ErrorLayout: React.FC<ErrorLayoutProps> = ({
     }
 
     function truncateString(str: string) {
-        return str.length > 26 ? str.substring(0, 26) + '...' : str;
+        return str.length > 24 ? str.substring(0, 24) + '...' : str;
     }
 
     console.log(item[2])
@@ -38,7 +38,7 @@ const ErrorLayout: React.FC<ErrorLayoutProps> = ({
             rounded-lg
             p-2
             w-full
-            max-w-[280px]
+            max-w-[320px]
             text-xl
             font-bold
             text-white

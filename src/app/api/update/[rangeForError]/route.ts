@@ -10,13 +10,22 @@ type mainData = {
     infoExtra: string
 }
 
-export async function POST(
-    request: Request
+interface IParams {
+    rangeForError: string
+}
+
+export async function PUT(
+    request: Request,
+    { params }: { params: IParams }
 ) {
+    const decode = decodeURIComponent(params.rangeForError)
+    const divideInPart = decode.split("-")
+
+    const part1 = divideInPart[0]
+    const part2 = divideInPart[1]
     const body = await request.json() as mainData
 
     try {
-        //const uniqueID = uuidv4()
 
         const auth = new google.auth.GoogleAuth({
             credentials: {
@@ -35,9 +44,9 @@ export async function POST(
             version: 'v4'
         })
 
-        const response = await sheets.spreadsheets.values.append({
+        const response = await sheets.spreadsheets.values.update({
             spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
-            range: 'A1:F1',
+            range: `${part1}:${part2}`,
             valueInputOption: 'USER_ENTERED',
             requestBody: {
                 values: [

@@ -5,8 +5,11 @@ import { useEffect, useState } from 'react'
 import { Plus } from 'lucide-react'
 import ErrorLayout from '@/components/ErrorLayout'
 import Main from '@/components/Main'
+import LinkButton from '@/components/LinkButton'
 
 export default async function Home() {
+
+
 
   const response = await fetch(`https://errciclopedia.vercel.app/api/get`, {
     next: { revalidate: 0 }
@@ -20,21 +23,7 @@ export default async function Home() {
 
       <Main errors={data.values.slice(1)} />
 
-      <Link
-        href={"/record"}
-        title='Gravar novo erro'
-        className='
-          fixed
-          bg-gradient-to-tr from-green-400 to-lime-500
-          text-white
-          rounded-full
-          p-4
-          bottom-4
-          right-4
-        '
-      >
-        <Plus size={60} />
-      </Link>
+      <LinkButton />
     </main>
   )
 }
