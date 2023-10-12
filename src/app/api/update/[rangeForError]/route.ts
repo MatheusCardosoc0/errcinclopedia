@@ -24,7 +24,6 @@ export async function PUT(
 
     const part1 = divideInPart[0]
     const part2 = divideInPart[1]
-    const part3 = divideInPart[2].replace('20%', ' ')
     const body = await request.json() as mainData
 
     try {
@@ -48,7 +47,7 @@ export async function PUT(
 
         const response = await sheets.spreadsheets.values.update({
             spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
-            range: `${part3}!${part1}:${part2}`,
+            range: `${body.status}!${part1}:${part2}`,
             valueInputOption: 'USER_ENTERED',
             requestBody: {
                 values: [

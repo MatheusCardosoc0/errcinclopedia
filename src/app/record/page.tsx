@@ -78,8 +78,6 @@ export default function Home() {
                     const countId = parseInt(match[1], 10);
 
                     await axios.put(`/api/update/A${countId}-H${countId}-${filterForType}`, { ...data, id: currentError[0], status: filterForType })
-
-                    console.log(`/api/update/A${countId}-H${countId}-${filterForType}`)
                 }
             }
 
@@ -124,8 +122,6 @@ export default function Home() {
     useEffect(() => {
         getCurrentCount()
     }, [filterForType])
-
-    console.log(currentCount)
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
