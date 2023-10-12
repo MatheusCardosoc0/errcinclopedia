@@ -50,6 +50,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
                             duration-1000
                             w-[320px]
                             h-[240px]
+                            mb-8
                         "
                     >
                         <CameraIcon size={50} />

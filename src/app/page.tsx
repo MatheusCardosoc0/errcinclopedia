@@ -3,25 +3,19 @@ import axios from 'axios'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Plus } from 'lucide-react'
-import ErrorLayout from '@/components/ErrorLayout'
+import ErrorLayout from '@/components/Main/ErrorLayout'
 import Main from '@/components/Main'
 import LinkButton from '@/components/LinkButton'
 
 export default async function Home() {
 
-
-
-  const response = await fetch(`https://errciclopedia.vercel.app/api/get`, {
-    next: { revalidate: 0 }
-  })
-
-  const data = await response.json()
+  //https://errciclopedia.vercel.app
 
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
 
-      <Main errors={data.values.slice(1)} />
+      <Main />
 
       <LinkButton />
     </main>

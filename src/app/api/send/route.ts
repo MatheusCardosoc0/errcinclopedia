@@ -8,6 +8,7 @@ type mainData = {
     context: string
     resolution: string
     infoExtra: string
+    status: string
 }
 
 export async function POST(
@@ -37,11 +38,11 @@ export async function POST(
 
         const response = await sheets.spreadsheets.values.append({
             spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
-            range: 'A1:F1',
+            range: `${body.status}!A:H`,
             valueInputOption: 'USER_ENTERED',
             requestBody: {
                 values: [
-                    [body.id, body.title, body.image, body.context, body.resolution, body.infoExtra]
+                    [body.id, body.title, body.image, body.context, body.resolution, body.infoExtra, 0, body.status]
                 ]
             }
         })

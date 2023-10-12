@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import Input from '@/components/Input'
+import { Input, Select } from '@/components/Inputs'
 import Textarea from '@/components/Textarea'
 import ImageUpload from '@/components/Upload'
+import { filterForTypeOptions } from '@/constants/filterForTypeOptions'
 import { useCurrentCount } from '@/context/currentCount'
 import { useCurrentError } from '@/context/currentError'
 import { useCurrentMod } from '@/context/currentMod'
@@ -10,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
@@ -28,6 +30,8 @@ type FormProps = z.infer<typeof schema>
 export default function Home() {
 
     const { currentMod } = useCurrentMod()
+    const [filterForType, setFilterForType] = useState<string>("Notas Fiscais")
+    const [currentCount, setCurrentCount] = useState(0)
 
     const {
         handleSubmit,
@@ -54,7 +58,6 @@ export default function Home() {
     const title = watch('title');
     const infoExtra = watch('infoExtra');
 
-    const { currentCount } = useCurrentCount()
     const { currentError } = useCurrentError()
 
     const router = useRouter()
@@ -63,9 +66,9 @@ export default function Home() {
 
         try {
             if (currentMod === 'POST') {
-                const id = `Error-${currentCount + 2}-${new Date()}`
+                const id = `Error-${currentCount + 1}-${new Date()}`
 
-                await axios.post('/api/send', { ...data, id })
+                await axios.post('/api/send', { ...data, id, status: filterForType })
             } else {
                 const str = currentError[0].toString()
                 const regex = /-([0-9]+)-/;
@@ -74,7 +77,9 @@ export default function Home() {
                 if (match) {
                     const countId = parseInt(match[1], 10);
 
-                    await axios.put(`/api/update/A${countId}-F${countId}`, { ...data, id: currentError[0] })
+                    await axios.put(`/api/update/A${countId}-H${countId}-${filterForType}`, { ...data, id: currentError[0], status: filterForType })
+
+                    console.log(`/api/update/A${countId}-H${countId}-${filterForType}`)
                 }
             }
 
@@ -93,6 +98,7 @@ export default function Home() {
             setValue('image', currentError[2].toString())
             setValue('context', currentError[3].toString())
             setValue('resolution', currentError[4].toString())
+            setFilterForType(currentError[7].toString())
             if (currentError[5]) {
                 setValue('infoExtra', currentError[5].toString())
             }
@@ -104,6 +110,22 @@ export default function Home() {
             router.replace('/')
         }
     }, [router, currentMod, currentError])
+
+    async function getCurrentCount() {
+        try {
+            const response = await axios.get(`/api/get/${filterForType}`)
+
+            setCurrentCount(response.data.values.length)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        getCurrentCount()
+    }, [filterForType])
+
+    console.log(currentCount)
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -152,6 +174,21 @@ export default function Home() {
                         onChange={(value) => setValue('image', value)}
                         value={image}
                     />
+
+                    {currentMod === 'POST' && (
+                        <div
+                            className='
+                            w-full
+                            items-start
+                        '
+                        >
+                            <Select
+                                onChange={e => setFilterForType(e.target.value)}
+                                options={filterForTypeOptions}
+                                value={filterForType}
+                            />
+                        </div>
+                    )}
 
                     <Input
                         id='title'

@@ -1,10 +1,19 @@
 import { google } from "googleapis"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
+
+
+interface IParams {
+    sheetName: 'notasFiscais' | 'Outros'
+}
 
 export const revalidate = 0
-export async function GET() {
-
+export async function GET(
+    request: NextRequest,
+    { params }: { params: IParams }
+) {
     try {
+        const { sheetName } = params
+
         const auth = new google.auth.GoogleAuth({
             credentials: {
                 client_email: process.env.NEXT_PUBLIC_EMAIL,
@@ -24,7 +33,7 @@ export async function GET() {
 
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
-            range: 'A:F',
+            range: `${sheetName}!A:H`,
             dateTimeRenderOption: 'FORMATTED_STRING',
             majorDimension: 'ROWS',
             valueRenderOption: 'FORMATTED_VALUE'
